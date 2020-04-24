@@ -1,0 +1,29 @@
+{
+  "passages":[
+    { "x":329, "y":0, "width":60, "height":180,
+    "destination_zone":"levels/huecomundo/zone01.json", "destination_x":0, "destination_y":118 }
+  ],
+
+  "doors":[
+      {"x":20, "y":118, "width":120, "height":60, "image":1,
+      "destination_zone":"levels/dangai/zone05.json", "destination_x":240, "destination_y":118 }
+  ],
+
+  "columns":6,
+  "rows":3,
+  "tile_size":60,
+  "floor":2,
+
+  "map":[0,0,0,0,0,0,
+         0,1,0,0,0,0,
+         0,0,0,0,0,0],
+
+  "graphics_map":[0,0,0,0,0,0,
+                  0,0,0,0,0,0,
+                  0,0,0,0,0,0],
+
+  "background":3,
+
+  "id":12
+
+}

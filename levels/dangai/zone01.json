@@ -1,0 +1,30 @@
+{
+
+  "passages":[
+    { "x":-60, "y":0, "width":60, "height":180,
+      "destination_zone":"levels/dangai/zone00.json", "destination_x":289, "destination_y":118 },
+    { "x":329, "y":0, "width":60, "height":180,
+      "destination_zone":"levels/dangai/zone02.json", "destination_x":0, "destination_y":118 }
+  ],
+
+  "doors":[
+  ],
+
+  "columns":6,
+  "rows":3,
+  "tile_size":60,
+  "floor":2,
+
+  "map":[0,0,0,0,0,0,
+         0,0,0,0,0,0,
+         0,0,0,0,0,0],
+
+  "graphics_map":[0,0,0,0,0,0,
+                  0,0,0,0,0,0,
+                  0,0,0,0,0,0],
+
+  "background":1,
+
+  "id":4
+
+}

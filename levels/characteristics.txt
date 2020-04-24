@@ -1,0 +1,55 @@
+backgrounds:
+  0 = Karakura
+  1 = Dangai
+  2 = Soul Society
+  3 = Hueco Mundo
+  4 = Las Noches
+
+doors.image:
+  0 = Senkaimon
+  1 = Garganta
+  2 = Las Noches
+  3 = Las Noches Wall (inside)
+
+map:
+  0 = empty
+  1 = collectible (run over)
+  2 = right and left collision
+  3 = right,left,top collision
+
+graphics_map:
+  0 =
+  1 = Ichigo house in Karakura              (type 3)
+  2 = Top left of red tower Las Noches      (type 0)
+  3 = Top right of red tower Las Noches     (type 3)
+  4 = Left gate Soul Society                (type 3)
+  5 = Right gate Soul Society               (type 3)
+  6 = Bottom left of red tower Las Noches   (type 3)
+  7 = Bottom right of red tower Las Noches  (type 2)
+  8 = Urahara shop in Karakura              (type 3)
+  9 = Top Left Big House Soul Society
+  10 = Top Middle Big House Soul Society
+  11 = Top Right Big House Soul Society
+  12 = Small tower Las Noches               (type 3)
+  13 = Bottom Left Big House Soul Society
+  14 = Bottom Middle Big House Soul Society
+  15 = Bottom Right Big House Soul Society
+
+Ex:
+graphics_map:
+
+[0,0,0,0,0,0,
+ 0,0,0,0,0,0,
+ 0,4,0,9,0,0]
+
+[0,0,0,0,0,0,
+ 0,1,0,0,0,0,
+ 0,5,0,9,0,0]
+
+[0, 0,0,0,0,0,
+ 0, 0,0,2,3,0,
+ 0,11,0,6,7,0]
+
+[0,0,0,0,0,
+ 0,0,0,0,0,
+ 0,13,14,0,]
