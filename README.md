@@ -5,7 +5,7 @@
 Just a little project I decided to do while in quarantine and with my internship suspended for some days.
 Learned a little bit of JavaScript and built a little platform "game";
 
-![image](screenshot_.png)
+![image](screenshot.png)
 
 ### How to use:
 
