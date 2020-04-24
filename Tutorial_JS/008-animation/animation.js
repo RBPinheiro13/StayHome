@@ -14,13 +14,13 @@ character = {
 
 }
 
-context.fillStyle = "#2C001E";
+context.fillStyle = "#333333";
 context.fillRect(0,0,320,180);
 
 loop = function(){
 
   character.x+=1;
-  context.fillStyle = "#2C001E";
+  context.fillStyle = "#333333";
   context.fillRect(0,0,320,180);
 
   context.fillStyle="#ff0000"

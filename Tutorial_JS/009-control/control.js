@@ -97,7 +97,7 @@ loop = function() {
     character.x = -character.width;
   }
 
-  context.fillStyle = "#2C001E";
+  context.fillStyle = "#333333";
   context.fillRect(0,0,context.canvas.width,context.canvas.height);
 
   context.fillStyle="#ff0000"

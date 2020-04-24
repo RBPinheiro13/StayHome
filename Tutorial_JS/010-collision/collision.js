@@ -74,7 +74,7 @@ loop = function(time_stamp) {
   red.x = controller.pointer_x - 32;
   red.y = controller.pointer_y - 32;
 
-  context.fillStyle="#2C001E";
+  context.fillStyle="#333333";
   context.fillRect(0,0,context.canvas.width,context.canvas.height);
 
   white.draw();
@@ -122,3 +122,19 @@ resize();
 
 // start the game loop
 window.requestAnimationFrame(loop);
+
+
+// Manage the click and show how many times
+var input = document.getElementById("input");
+var output = document.getElementById("output");
+
+var counter = 0;
+
+var click = function(event) {
+
+  counter += 1;
+  output.innerHTML = "You clicked " + counter + " times!";
+
+}
+
+input.addEventListener("click", click);

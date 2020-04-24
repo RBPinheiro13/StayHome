@@ -41,7 +41,7 @@
 
     var x = 0;
 
-    buffer.fillStyle = "#2C001E";
+    buffer.fillStyle = "#333333";
     buffer.fillRect(0, 0, buffer.canvas.width, buffer.canvas.height);
 
     for (let index = images.length - 1; index > -1; -- index) {
@@ -71,7 +71,7 @@
     }
 
     /* make sure we're maintaining aspect ratio. 1 image high, by 3 wide. */
-    display.canvas.height = display.canvas.width * (57/(2*60+48));
+    display.canvas.height = display.canvas.width * 1/3;
 
     display.imageSmoothingEnabled = false;// This keeps the image looking sharp.
 
@@ -83,17 +83,32 @@
   window.addEventListener("resize", resize);
 
   /* We have 2 50x60 and 1 57x48 images, so the buffer should fit them exactly. */
-  buffer.canvas.height = 57;
-  buffer.canvas.width = 2*60+48;
+  buffer.canvas.height = 60;
+  buffer.canvas.width = 180;
 
   resize();
 
   load(0,"run_left.png");
-  // alert("0");
+  alert("0");
   load(1,"run_right.png");
-  // alert("1");
-  load(2,"stop.png");
-  // alert("2");
+  alert("1");
+  load(2,"stop_R.png");
+  alert("2");
+
+  // Manage the click and show how many times
+  var input = document.getElementById("input");
+  var output = document.getElementById("output");
+
+  var counter = 0;
+
+  var click = function(event) {
+
+    counter += 1;
+    output.innerHTML = "You clicked " + counter + " times!";
+
+  }
+
+  input.addEventListener("click", click);
 
 
 })();

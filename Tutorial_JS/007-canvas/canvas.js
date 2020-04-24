@@ -3,7 +3,7 @@ var display = document.getElementById("display").getContext("2d");
 display.canvas.height=180;
 display.canvas.width=320;
 
-display.fillStyle = "#2C001E";
+display.fillStyle = "#333333";
 display.fillRect(0,0,320,180);
 
 display.strokeStyle = "#ffffff";

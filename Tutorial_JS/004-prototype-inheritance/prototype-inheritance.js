@@ -33,7 +33,7 @@ Worker.prototype.constructor=Worker;
 
 Worker.prototype.talk = function() {
 
-  console.log("Don't tell me to shut up, " + this.name + ". I'm an " + this.job + this.constructor.name);
+  console.log("Don't tell me to shut up, " + this.name + ". I'm an " + this.job +" "+ this.constructor.name);
 
 }
 
