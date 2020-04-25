@@ -792,10 +792,10 @@ display.buffer.canvas.height = 9*SPRITE_SIZE/3; //This will be the virtual heigh
 var touchscreen = false;
 var touch_sz = 1;
 
-if ('ontouchstart' in document.documentElement) {
+window.addEventListener("touchstart",function(){
   touch_sz = 1.4;
   touchscreen = true;
-}
+});
 
 // touch_sz = 1.4;
 // touchscreen = true;
