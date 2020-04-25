@@ -795,6 +795,7 @@ var touch_sz = 1;
 window.addEventListener("touchstart",function(){
   touch_sz = 1.4;
   touchscreen = true;
+  display.resize();
 });
 
 // touch_sz = 1.4;
