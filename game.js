@@ -789,15 +789,26 @@ display.buffer.canvas.height = 9*SPRITE_SIZE/3; //This will be the virtual heigh
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////// Check if we are in a touch enabled device //////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////
-var touchscreen = false;
-var touch_sz = 1;
 
-window.addEventListener("touchstart",function(){
-  touch_sz = 1.4;
-  touchscreen = true;
-  display.resize();
-});
+function isTouchDevice() {
+    return 'ontouchstart' in document.documentElement;
+}
 
+if (isTouchDevice()) {
+  var touch_sz = 1.4;
+  var touchscreen = true;
+}
+else {
+  var touchscreen = false;
+  var touch_sz = 1;
+}
+
+
+
+// window.addEventListener("touchstart",function(){
+//
+// });
+//
 // touch_sz = 1.4;
 // touchscreen = true;
 
