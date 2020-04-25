@@ -803,15 +803,6 @@ else {
   var touch_sz = 1;
 }
 
-
-
-// window.addEventListener("touchstart",function(){
-//
-// });
-//
-// touch_sz = 1.4;
-// touchscreen = true;
-
 window.addEventListener("resize", display.resize);
 
 window.addEventListener("keydown", controller.keyUpDown);
