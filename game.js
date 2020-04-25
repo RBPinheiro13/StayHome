@@ -89,7 +89,6 @@ Input.prototype = {
 
 };
 
-
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////// Class to create the doors and passages  ///// //////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -133,6 +132,40 @@ Door.prototype = {
 };
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////// Class to create touchscreen support  ///////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+var TouchButton = function(x, y, width, height,text, color) {
+
+  this.active = false;
+  this.color = color;
+  this.height = height;
+  this.width = width;
+  this.text = text;
+  this.x = x;
+  this.y = y;
+
+}
+
+TouchButton.prototype = {
+
+  // returns true if the specified point lies within the rectangle:
+  containsPoint:function(x, y) {
+
+    // if the point is outside of the rectangle return false:
+    if (x < this.x || x > this.x + this.width || y < this.y || y > this.y + this.width) {
+
+      return false;
+
+    }
+
+    return true;
+
+  }
+
+};
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////// Classes for the game logic  ////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -141,10 +174,11 @@ var controller, display, game;
 display = {
 
   buffer:document.createElement("canvas").getContext("2d"),
+  // buffer2:document.createElement("canvas"),
   context:document.querySelector("canvas").getContext("2d"),
   output:document.getElementById("output"),
   // output:document.querySelector("p"), // used to show output in browser window
-
+  bounding_rectangle:undefined,
   /* The sprite sheet object holds the sprite sheet graphic and some animation frame
   sets. An animation frame set is just an array of frame values that correspond to
   each sprite image in the sprite sheet, just like a tile sheet and a tile map. */
@@ -226,29 +260,40 @@ display = {
 
     }
 
-    this.context.drawImage(display.buffer.canvas, 0, 0, display.buffer.canvas.width, display.buffer.canvas.height, 0, 0, display.context.canvas.width, display.context.canvas.height);
+
+    this.context.drawImage(display.buffer.canvas, 0, 0, display.buffer.canvas.width, display.buffer.canvas.height, 0, 0, display.context.canvas.width, display.context.canvas.height/touch_sz);
+
+    if(touchscreen){this.renderButtons(controller.buttons);};
+
 
     // this.output.innerHTML = "tile_x: " + game.player.tile_x + "<br>tile_y: " + game.player.tile_y + "<br>map index: " + game.player.tile_y + " * " + game.world.columns + " + " + game.player.tile_x + " = " + String(game.player.tile_y * game.world.columns + game.player.tile_x + "Zone " +game.world.id);
     this.output.innerHTML = "Zone " +game.world.id;
 
   },
+
+  renderButtons:function(buttons) {
+
+  var button, index;
+
+  this.context.fillStyle = "#202830";
+  this.context.fillRect(0, this.context.canvas.height/touch_sz, this.context.canvas.width, this.context.canvas.height);
+
+  for (index = buttons.length - 1; index > -1; -- index) {
+
+    button = buttons[index];
+
+    this.context.fillStyle = button.color;
+    this.context.fillRect(button.x/display.buffer_output_ratio, button.y/display.buffer_output_ratio, button.width/display.buffer_output_ratio, button.height/display.buffer_output_ratio);
+
+    this.context.fillStyle = "#ffffff"
+    var letter_sz = 40/display.buffer_output_ratio;
+    this.context.font = String(letter_sz)+"px Arial";
+    this.context.fillText(button.text, button.x/display.buffer_output_ratio+button.width/display.buffer_output_ratio*0.15, button.y/display.buffer_output_ratio+button.height/display.buffer_output_ratio*0.7);
+  }
+
+},
+
   resize:function() {
-
-    // if(document.documentElement.clientWidth/document.documentElement.clientHeight>16/9) {
-    //   display.context.canvas.height = document.documentElement.clientHeight;
-    //   display.context.canvas.width = document.documentElement.clientHeight * 16/9;
-    //   display.context.canvas.height -= 100;
-    //   display.context.canvas.width -= 100;
-    // }
-    //
-    // else {
-    //   display.context.canvas.width = document.documentElement.clientWidth;
-    //   display.context.canvas.height = document.documentElement.clientWidth * 9/16;
-    //   display.context.canvas.height -= 100;
-    //   display.context.canvas.width -= 100;
-    // }
-
-
 
       var client_height = document.documentElement.clientHeight;
 
@@ -260,8 +305,10 @@ display = {
 
       }
 
-      display.context.canvas.height = Math.floor(display.context.canvas.width * 0.5);
+      display.context.canvas.height = Math.floor(display.context.canvas.width * 0.5 * touch_sz);
 
+      display.bounding_rectangle = display.context.canvas.getBoundingClientRect();
+      display.buffer_output_ratio = display.buffer.canvas.width / display.context.canvas.width;
 
     display.context.imageSmoothingEnabled = false;
 
@@ -274,6 +321,63 @@ controller = {
   /* Now each key object knows its physical state as well as its active state.
   When a key is active it is used in the game logic, but its physical state is
   always recorded and never altered for reference. */
+  buttons:[
+    new TouchButton(10, 185, 60, 60,"▲", "#f09000"),
+    new TouchButton(80, 185, 60, 60,"▼", "#f09000"),
+    new TouchButton(220, 185, 60, 60,"◄", "#0090f0"),
+    new TouchButton(290, 185, 60, 60,"►", "#0090f0")
+
+  ],
+
+  testButtons:function(target_touches) {
+
+    var button, index0, index1, touch;
+
+    // loop through all buttons:
+    for (index0 = this.buttons.length - 1; index0 > -1; -- index0) {
+
+      button = this.buttons[index0];
+      button.active = false;
+
+      // loop through all touch objects:
+      for (index1 = target_touches.length - 1; index1 > -1; -- index1) {
+
+        touch = target_touches[index1];
+
+        // make sure the touch coordinates are adjusted for both the canvas offset and the scale ratio of the buffer and output canvases:
+        if (button.containsPoint((touch.clientX - display.bounding_rectangle.left) * display.buffer_output_ratio, (touch.clientY - display.bounding_rectangle.top) * display.buffer_output_ratio)) {
+
+          button.active = true;
+          break;// once the button is active, there's no need to check if any other points are inside, so continue
+
+        }
+
+      }
+
+    }
+  },
+
+  touchEnd:function(event) {
+
+    event.preventDefault();
+    controller.testButtons(event.targetTouches);
+
+  },
+
+  touchMove:function(event) {
+
+    event.preventDefault();
+    controller.testButtons(event.targetTouches);
+
+  },
+
+  touchStart:function(event) {
+
+    event.preventDefault();
+    controller.testButtons(event.targetTouches);
+
+  },
+
   left:  new Input(false,false),
   right: new Input(false,false),
   up:    new Input(false,false),
@@ -675,22 +779,36 @@ game = {
 
 };
 
-
 ////////////////////
 //// INITIALIZE ////
 ////////////////////
 
-display.buffer.canvas.width = 18*SPRITE_SIZE/3; //This will be the size of the display
-display.buffer.canvas.height = 9*SPRITE_SIZE/3;
+display.buffer.canvas.width = 18*SPRITE_SIZE/3; //This will be the virtual width of the display = 360
+display.buffer.canvas.height = 9*SPRITE_SIZE/3; //This will be the virtual height of the display = 180
 
-//Start the game with the biggest possible canvas
-display.context.canvas.height = document.documentElement.clientHeight - 48;
-display.context.canvas.width = document.documentElement.clientWidth ;
+////////////////////////////////////////////////////////////////////////////////////////////////////
+////////// Check if we are in a touch enabled device //////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////
+var touchscreen = false;
+var touch_sz = 1;
+
+if ('ontouchstart' in document.documentElement) {
+  touch_sz = 1.4;
+  touchscreen = true;
+}
+
+// touch_sz = 1.4;
+// touchscreen = true;
 
 window.addEventListener("resize", display.resize);
 
 window.addEventListener("keydown", controller.keyUpDown);
 window.addEventListener("keyup", controller.keyUpDown);
+
+// setting passive:false allows you to use preventDefault in event listeners:
+display.context.canvas.addEventListener("touchend", controller.touchEnd, {passive:false});
+display.context.canvas.addEventListener("touchmove", controller.touchMove, {passive:false});
+display.context.canvas.addEventListener("touchstart", controller.touchStart, {passive:false});
 
 display.resize();
 
