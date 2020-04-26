@@ -1,14 +1,11 @@
 (function() { "use strict";
 
-/* Each sprite sheet tile is 60x60 pixels in dimension. Ichigo's size*/
+/* Each sprite sheet tile is 60x60 pixels in dimension. Player's size*/
 const SPRITE_SIZE = 60;
 
-/* The Animation class manages frames within an animation frame set. The frame
-set is an array of values that correspond to the location of sprite images in
-the sprite sheet. For example, a frame value of 0 would correspond to the first
-sprite image / tile in the sprite sheet. By arranging these values in a frame set
-array, you can create a sequence of frames that make an animation when played in
-quick succession. */
+////////////////////////////////////////////////////////////
+////// Class to create the animation for the player ///////
+//////////////////////////////////////////////////////////
 var Animation = function(frame_set, delay) {
 
   this.count = 0;// Counts the number of game cycles since the last frame change.
@@ -66,9 +63,9 @@ Animation.prototype = {
 
 };
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////// Class to create the controller and the inputs //////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////
+////// Class to create the controller and the inputs //////
+//////////////////////////////////////////////////////////
 const Input = function(active, state) {
 
   this.active = active;
@@ -89,9 +86,9 @@ Input.prototype = {
 
 };
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////// Class to create the doors and passages  ///// //////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////
+////// Class to create the doors and passages  ////////
+//////////////////////////////////////////////////////
 
 const Passage = function(x, y, width, height, destination_zone, destination_x, destination_y) {
 
@@ -131,9 +128,9 @@ Door.prototype = {
 
 };
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////// Class to create touchscreen support  ///////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////
+////// Class to create touchscreen support  ///////
+//////////////////////////////////////////////////
 
 var TouchButton = function(x, y, width, height,text, color) {
 
@@ -165,9 +162,9 @@ TouchButton.prototype = {
 
 };
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////// Classes for the game logic  ////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////
+////////// Classes for the game logic  ////////
+//////////////////////////////////////////////
 
 var controller, display, game;
 
@@ -206,10 +203,6 @@ display = {
     display.buffer.fillStyle = "#667882";
     display.buffer.fillRect(0, (display.buffer.canvas.height-8), display.buffer.canvas.width, 8);
 
-    /* When you draw your sprite, just use the animation frame value to determine
-    where to cut your image from the sprite sheet. It's the same technique used
-    for cutting tiles out of a tile sheet. Here I have a very easy implementation
-    set up because my sprite sheet is only a single row. */
     // draw the collectibles and the obstacles
     if(!game.area_visited[game.world.id]) {
       for (let index = game.world.map.length - 1; index > -1; -- index) {
@@ -225,7 +218,7 @@ display = {
 
       if (game.world.graphics_map[index] != 0) {
 
-          this.buffer.drawImage(obstacles_image,game.world.graphics_map[index]%4*game.world.tile_size, Math.floor(game.world.graphics_map[index]/4)*game.world.tile_size, game.world.tile_size, game.world.tile_size,(index % game.world.columns) * game.world.tile_size, Math.floor(index / game.world.columns) * game.world.tile_size-game.world.floor, game.world.tile_size, game.world.tile_size);
+        this.buffer.drawImage(obstacles_image,game.world.graphics_map[index]%4*game.world.tile_size, Math.floor(game.world.graphics_map[index]/4)*game.world.tile_size, game.world.tile_size, game.world.tile_size,(index % game.world.columns) * game.world.tile_size, Math.floor(index / game.world.columns) * game.world.tile_size-game.world.floor, game.world.tile_size, game.world.tile_size);
 
       };
     }
@@ -245,9 +238,9 @@ display = {
 
     if(game.world.id!=19) {
 
-      this.buffer.font="lighter 15px Arial";
+      this.buffer.font="18px Arial";
       this.buffer.fillStyle = "red";
-      this.buffer.fillText("Spiritual Energy: "+game.orb_count, 10,15);
+      this.buffer.fillText("Spiritual Energy: "+game.orb_count, 10,18);
 
     }
     else  {
@@ -266,7 +259,6 @@ display = {
 
     if(touchscreen){
       this.renderButtons(controller.touch_buttons);
-      this.touch_output.innerHTML = "X: " + controller.touch_X + " Y: " + controller.touch_Y + " Ratio " + display.buffer_output_ratio;
     };
 
 
@@ -277,42 +269,42 @@ display = {
 
   renderButtons:function(touch_buttons) {
 
-  var button, index;
+    var button, index;
 
-  this.context.fillStyle = "#202830";
-  this.context.fillRect(0, this.context.canvas.height/touch_sz, this.context.canvas.width, this.context.canvas.height);
+    this.context.fillStyle = "#202830";
+    this.context.fillRect(0, this.context.canvas.height/touch_sz, this.context.canvas.width, this.context.canvas.height);
 
-  for (index = touch_buttons.length - 1; index > -1; -- index) {
+    for (index = touch_buttons.length - 1; index > -1; -- index) {
 
-    button = touch_buttons[index];
+      button = touch_buttons[index];
 
-    this.context.fillStyle = button.color;
-    this.context.fillRect(button.x/display.buffer_output_ratio, button.y/display.buffer_output_ratio, button.width/display.buffer_output_ratio, button.height/display.buffer_output_ratio);
+      this.context.fillStyle = button.color;
+      this.context.fillRect(button.x/display.buffer_output_ratio, button.y/display.buffer_output_ratio, button.width/display.buffer_output_ratio, button.height/display.buffer_output_ratio);
 
-    this.context.fillStyle = "#ffffff"
-    var letter_sz = 40/display.buffer_output_ratio;
-    this.context.font = String(letter_sz)+"px Arial";
-    this.context.fillText(button.text, button.x/display.buffer_output_ratio+button.width/display.buffer_output_ratio*0.15, button.y/display.buffer_output_ratio+button.height/display.buffer_output_ratio*0.7);
-  }
+      this.context.fillStyle = "#ffffff"
+      var letter_sz = 40/display.buffer_output_ratio;
+      this.context.font = String(letter_sz)+"px Arial";
+      this.context.fillText(button.text, button.x/display.buffer_output_ratio+button.width/display.buffer_output_ratio*0.15, button.y/display.buffer_output_ratio+button.height/display.buffer_output_ratio*0.7);
+    }
 
-},
+  },
 
   resize:function() {
 
-      var client_height = document.documentElement.clientHeight;
+    var client_height = document.documentElement.clientHeight;
 
-      display.context.canvas.width = document.documentElement.clientWidth - 32;
+    display.context.canvas.width = document.documentElement.clientWidth - 32;
 
-      if (display.context.canvas.width > client_height) {
+    if (display.context.canvas.width > client_height) {
 
-        display.context.canvas.width = client_height;
+      display.context.canvas.width = client_height;
 
-      }
+    }
 
-      display.context.canvas.height = Math.floor(display.context.canvas.width * 0.5 * touch_sz);
+    display.context.canvas.height = Math.floor(display.context.canvas.width * 0.5 * touch_sz);
 
-      display.bounding_rectangle = display.context.canvas.getBoundingClientRect();
-      display.buffer_output_ratio = display.buffer.canvas.width / display.context.canvas.width;
+    display.bounding_rectangle = display.context.canvas.getBoundingClientRect();
+    display.buffer_output_ratio = display.buffer.canvas.width / display.context.canvas.width;
 
     display.context.imageSmoothingEnabled = false;
 
@@ -325,8 +317,6 @@ controller = {
   /* Now each key object knows its physical state as well as its active state.
   When a key is active it is used in the game logic, but its physical state is
   always recorded and never altered for reference. */
-  touch_X:undefined,
-  touch_Y:undefined,
 
   touch_buttons:[
     new TouchButton(10, 185, 60, 60,"▲", "#f09000"),
@@ -350,8 +340,6 @@ controller = {
       for (index1 = target_touches.length - 1; index1 > -1; -- index1) {
 
         touch = target_touches[index1];
-        controller.touch_X = (touch.clientX - display.bounding_rectangle.left)*display.buffer_output_ratio;
-        controller.touch_Y = (touch.clientY - display.bounding_rectangle.top)*display.buffer_output_ratio;
 
         // make sure the touch coordinates are adjusted for both the canvas offset and the scale ratio of the buffer and output canvases:
         if (button.containsPoint((touch.clientX - display.bounding_rectangle.left)*display.buffer_output_ratio, (touch.clientY - display.bounding_rectangle.top)*display.buffer_output_ratio)) {
@@ -412,7 +400,7 @@ controller = {
       case 38:controller.up.update(key_state);break;
       case 39:controller.right.update(key_state);break;
       case 40:controller.down.update(key_state);break;
-      // case 37:controller.attack.update(key_state);break;
+      // case ?? :controller.attack.update(key_state);break;
     }
 
   }
@@ -450,11 +438,11 @@ game = {
 
     },
 
-    /////////////////////////////////////////////////////////////////////////////////////////
-    /////////////////////////// Detect Collision with the floor ////////////////////////////
-    ////////////////////////////////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////////////////////////////
+  /////////////// Detect Collision with the floor and end of levels (walls) ///////////////
+  ////////////////////////////////////////////////////////////////////////////////////////
 
-    floor_wall_collision:function() {
+  floor_wall_collision:function() {
 
       if (this.y + this.height > display.buffer.canvas.height - game.world.floor) {
 
@@ -480,118 +468,133 @@ game = {
 
   world:undefined,
 
+  ///////////////////////////////////////////////////////////////////////
+  ////////// Check if our player is colliding with an obstacle /////////
+  /////////////////////////////////////////////////////////////////////
+
   collision: {
 
-      // the reason these functions are indexed with numbers is because they
-      // correspond directly to tile values in the map array. For instance, this
-      // function handles collision for any tile in the map with a value of 1
-      // it handles collision detection and response on the specified player object
-      // at the specified row and column in the tile map. the 1 tile collision
-      // shape has a flat top and a flat right side, so only test for collision
-      // and do response on those sides.
+    // the reason these functions are indexed with numbers is because they
+    // correspond directly to tile values in the map array. For instance, this
+    // function handles collision for any tile in the map with a value of 1
+    // it handles collision detection and response on the specified player object
+    // at the specified row and column in the tile map. the 1 tile collision
+    // shape has a flat top and a flat right side, so only test for collision
+    // and do response on those sides.
 
-      // the 2 tile type has a top and a left side to collide with
-      2:function(object, row, column) {
+    // the 2 tile type has a top and a left side to collide with
+    2:function(object, row, column) {
 
-        if (this.rightCollision(object, row)) { return; }
-        this.leftCollision(object, column);
-
-      },
-
-      // the 3 tile type has collision on all sides but the bottom
-      3:function(object, row, column) {
-
-        if (this.topCollision(object, row)) { return; }// you only want to do one
-        if (this.leftCollision(object, column)) { return; }// of these collision
-        this.rightCollision(object, column);// responses. that's why there are if statements
-
-
-      },
-
-      /* This function handles collision with a rightward moving object. Another
-      design requirement to use this method is that objects must have a record of
-      their current and last physical position. A collision can only occur when a
-      player enters into a collision shape through its boundary. It's foolproof so
-      long as you always spawn your players on empty tiles and not in the walls. */
-      leftCollision(object, column) {
-
-        if (object.x-object.old_x > 0) {// If the object is moving right
-
-          var left = column * game.world.tile_size;// calculate the left side of the collision tile
-
-          if (object.x + object.width * 0.5 > left && object.old_x <= left) {// If the object was to the right of the collision object, but now is to the left of it
-
-            object.velocity_x = 0;// Stop moving
-            object.x = object.old_x = left - object.width * 0.5 - 0.001;// place object outside of collision
-            // the 0.001 is just to ensure that the object is no longer in the same tile space as the collision tile
-            // due to the way object tile position is calculated, moving the object to the exact boundary of the collision tile
-            // would not move it out if its tile space, meaning that another collision with an adjacent tile might not be detected in another broad phase check
-
-            return true;
-
-          }
-
-        }
-
-        return false;
-
-      },
-
-      // these are all basically the same concept as the leftCollision function,
-      // only for the different sides.
-
-      rightCollision(object, column) {
-
-        if (object.x-object.old_x < 0) {
-
-          var right = (column + 1) * game.world.tile_size;
-
-          if (object.x + object.width * 0.5 < right && object.old_x + object.width * 0.5 >= right) {
-
-            object.velocity_x = 0;
-            object.old_x = object.x = right - object.width * 0.5;
-
-            return true;
-
-          }
-
-        }
-
-        return false;
-
-      },
-
-      topCollision(object, row) {
-
-        if (object.y-object.old_y > 0) {
-
-          var top = row * game.world.tile_size;
-
-          if (object.y + object.height > top && object.old_y + object.height <= top) {
-
-            object.jumping = false;
-            object.velocity_y = 0;
-            object.old_y = object.y = top - object.height - 0.01;
-
-            return true;
-
-          }
-
-        }
-
-        return false;
-
-      }
+      if (this.rightCollision(object, row)) { return; }
+      this.leftCollision(object, column);
 
     },
 
+    // the 3 tile type has collision on all sides but the bottom
+    3:function(object, row, column) {
+
+      if (this.topCollision(object, row)) { return; }// you only want to do one
+      if (this.leftCollision(object, column)) { return; }// of these collision
+      this.rightCollision(object, column);// responses. that's why there are if statements
+
+
+    },
+
+    /* This function handles collision with a rightward moving object. Another
+    design requirement to use this method is that objects must have a record of
+    their current and last physical position. A collision can only occur when a
+    player enters into a collision shape through its boundary. It's foolproof so
+    long as you always spawn your players on empty tiles and not in the walls. */
+    leftCollision(object, column) {
+
+      if (object.x-object.old_x > 0) {// If the object is moving right
+
+        var left = column * game.world.tile_size;// calculate the left side of the collision tile
+
+        if (object.x + object.width * 0.5 > left && object.old_x <= left) {// If the object was to the right of the collision object, but now is to the left of it
+
+          object.velocity_x = 0;// Stop moving
+          object.x = object.old_x = left - object.width * 0.5 - 0.001;// place object outside of collision
+          // the 0.001 is just to ensure that the object is no longer in the same tile space as the collision tile
+          // due to the way object tile position is calculated, moving the object to the exact boundary of the collision tile
+          // would not move it out if its tile space, meaning that another collision with an adjacent tile might not be detected in another broad phase check
+
+          return true;
+
+        }
+
+      }
+
+      return false;
+
+    },
+
+    // these are all basically the same concept as the leftCollision function,
+    // only for the different sides.
+
+    rightCollision(object, column) {
+
+      if (object.x-object.old_x < 0) {
+
+        var right = (column + 1) * game.world.tile_size;
+
+        if (object.x + object.width * 0.5 < right && object.old_x + object.width * 0.5 >= right) {
+
+          object.velocity_x = 0;
+          object.old_x = object.x = right - object.width * 0.5;
+
+          return true;
+
+        }
+
+      }
+
+      return false;
+
+    },
+
+    topCollision(object, row) {
+
+      if (object.y-object.old_y > 0) {
+
+        var top = row * game.world.tile_size;
+
+        if (object.y + object.height > top && object.old_y + object.height <= top) {
+
+          object.jumping = false;
+          object.velocity_y = 0;
+          object.old_y = object.y = top - object.height - 0.01;
+
+          return true;
+
+        }
+
+      }
+
+      return false;
+
+    }
+
+  },
+
+  ///////////////////////////////////////////////////////////////////////
+  ////////// The game turns here, the loop, movements, etc /////////////
+  /////////////////////////////////////////////////////////////////////
   engine: {
 
     accumulated_time:window.performance.now(),
     frame_request:undefined,
     time_step:1000/60,
 
+    //////////////////////////////////////////////////////////////////////////////////////////
+    ////// Turns forever, calculate the player movements and interactions with objects //////
+    ////////////////////////////////////////////////////////////////////////////////////////
+
     loop:function(time_stamp) {
+
+      /////////////////////////////////////////////////////
+      ////////// If the player pressed 'up', jump ////////
+      ///////////////////////////////////////////////////
 
       if ((controller.up.active||controller.touch_buttons[0].active) && !game.player.jumping) {
 
@@ -601,6 +604,10 @@ game = {
         game.player.y_velocity -= 12;
 
       }
+
+      /////////////////////////////////////////////////////////////////////////////////////////////
+      ////////// If the player pressed 'left/right', move left/right and change animation ////////
+      ///////////////////////////////////////////////////////////////////////////////////////////
 
       if (controller.left.active||controller.touch_buttons[2].active) {
 
@@ -619,7 +626,10 @@ game = {
 
       }
 
-      /* If you're just standing still, change the animation to standing still. */
+      /////////////////////////////////////////////////////////////////////////////////////
+      ////////// Standing still facing right or left, change animation accordingly////////
+      ///////////////////////////////////////////////////////////////////////////////////
+
       if (!(controller.left.active||controller.touch_buttons[2].active) && !(controller.right.active||controller.touch_buttons[3].active) && game.player.last_mov=="R") {
 
         game.player.animation.change(display.sprite_sheet.frame_sets[0], 80);
@@ -632,6 +642,10 @@ game = {
 
       }
 
+      ////////////////////////////////////////////////////////////////////////
+      ////////// Update the player position and check for collisions ////////
+      //////////////////////////////////////////////////////////////////////
+
       game.player.update();
       game.player.floor_wall_collision();
 
@@ -640,9 +654,6 @@ game = {
       game.player.tile_y = Math.floor((game.player.y+game.player.height) / game.world.tile_size);
 
       var value_at_index = game.world.map[game.player.tile_y * game.world.columns + game.player.tile_x];
-
-      // do some output so we can see it all in action
-      // display.output.innerHTML = "tile_x: " + game.player.tile_x + "<br>tile_y: " + game.player.tile_y + "<br>map index: " + game.player.tile_y + " * " + game.world.columns + " + " + game.player.tile_x + " = " + String(game.player.tile_y * game.world.columns + game.player.tile_x) + "<br>tile value: " + value_at_index;
 
       // if it's not an empty tile, we need to do narrow phase collision detection and possibly response!
       if (value_at_index != 0 && value_at_index != 1 && value_at_index != undefined) {
@@ -653,6 +664,10 @@ game = {
 
       }
 
+      ////////////////////////////////////////////////////////////////////////
+      ////////// Check for collisions again (X and Y axis collisions) ///////
+      //////////////////////////////////////////////////////////////////////
+
       game.player.tile_x = Math.floor((game.player.x + game.player.width * 0.5) / game.world.tile_size);
       game.player.tile_y = Math.floor((game.player.y + game.player.height) / game.world.tile_size);
       value_at_index = game.world.map[game.player.tile_y * game.world.columns + game.player.tile_x];
@@ -663,12 +678,14 @@ game = {
 
       }
 
+      //////////////////////////////////////////////////////////
+      /////// Check for collisions with orbs to collect ///////
+      ////////////////////////////////////////////////////////
+
       game.player.tile_x = Math.floor((game.player.x + game.player.width * 0.5) / game.world.tile_size);
       game.player.tile_y = Math.floor((game.player.y + game.player.height) / game.world.tile_size);
       value_at_index = game.world.map[game.player.tile_y * game.world.columns + game.player.tile_x];
-      /////////////////////////////////////////////////////////////////////////////////////////
-      /////////////////////////// Detect Collision with orb to collect/////////////////////////
-      ////////////////////////////////////////////////////////////////////////////////////////
+
       if (value_at_index == 1 && !game.area_visited[game.world.id]) {
 
         game.orb_count ++;
@@ -676,7 +693,12 @@ game = {
 
       };
 
+
       game.player.animation.update();
+
+      //////////////////////////////////////////////////////////////////////////////////////////
+      /////// Check if the player enters a door or a passage to go to a different area ////////
+      ////////////////////////////////////////////////////////////////////////////////////////
 
       for (let index = game.world.doors.length - 1; index > -1; -- index) {
 
@@ -715,6 +737,10 @@ game = {
 
       }
 
+      //////////////////////////////////////////////////////////////////////////
+      /////// Render the correct frame on the screen and repeat it all ////////
+      ////////////////////////////////////////////////////////////////////////
+
       display.render();
 
       window.requestAnimationFrame(game.engine.loop);
@@ -736,6 +762,10 @@ game = {
 
 
   },
+
+  ////////////////////////////////////////////////////////////////////////////////
+  ///// Load the JSON file with the informations about the game area(level) /////
+  //////////////////////////////////////////////////////////////////////////////
 
   loadArea:function(url, callback) {
 
@@ -765,6 +795,10 @@ game = {
     game.engine.stop();
 
   },
+
+  ////////////////////////////////////////////////////////////////////////////////////////////////////////
+  ///// Callbacj function everytime we need to load a new area, resets the objects (doors/passages) /////
+  //////////////////////////////////////////////////////////////////////////////////////////////////////
 
   reset:function() {
 
@@ -797,12 +831,12 @@ game = {
 display.buffer.canvas.width = 18*SPRITE_SIZE/3; //This will be the virtual width of the display = 360
 display.buffer.canvas.height = 9*SPRITE_SIZE/3; //This will be the virtual height of the display = 180
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
-////////// Check if we are in a touch enabled device //////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////
+////////// Check if we are in a touch enabled device ////////////////
+////////////////////////////////////////////////////////////////////
 
 function isTouchDevice() {
-    return 'ontouchstart' in document.documentElement;
+  return 'ontouchstart' in document.documentElement;
 }
 
 if (isTouchDevice()) {
@@ -814,21 +848,34 @@ else {
   var touch_sz = 1;
 }
 
+////////////////////////////////////////////////////////////////////////////
+////////// Add the event listener for resize and keyboard events //////////
+//////////////////////////////////////////////////////////////////////////
+
+
 window.addEventListener("resize", display.resize);
 
 window.addEventListener("keydown", controller.keyUpDown);
 window.addEventListener("keyup", controller.keyUpDown);
 
-// setting passive:false allows you to use preventDefault in event listeners:
+////////////////////////////////////////////////////////////////////////////
+////////// Add the event listener for touch events (mobile device) ////////
+//////////////////////////////////////////////////////////////////////////
+
 display.context.canvas.addEventListener("touchend", controller.touchEnd, {passive:false});
 display.context.canvas.addEventListener("touchmove", controller.touchMove, {passive:false});
 display.context.canvas.addEventListener("touchstart", controller.touchStart, {passive:false});
+
+//////////////////////////////////////////////
+////////// Resize to fit the screen /////////
+////////////////////////////////////////////
 
 display.resize();
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////// Create the array that contains the images of the game and populate the arrays //////////
 //////////////////////////////////////////////////////////////////////////////////////////////////
+
 var background_num = 5;
 var background = new Array();
 var check_loading = new Array();
@@ -885,6 +932,10 @@ for (var i = 0; i < door_num; i++) {
   load(door_image,i,check_door_loading,door_loaded)
 }
 
+/////////////////////////////////////////////////////
+////////// Loading the collectibles/////////////////
+///////////////////////////////////////////////////
+
 
 orb.addEventListener("load", function(event) {// When the load event fires, do this:
   game.loadArea("levels/karakura/zone00.json", function() {
@@ -893,6 +944,10 @@ orb.addEventListener("load", function(event) {// When the load event fires, do t
   orb_loaded = true;
 });
 
+/////////////////////////////////////////////////////
+////////// Loading the obstacles ///////////////////
+///////////////////////////////////////////////////
+
 obstacles_image.addEventListener("load", function(event) {// When the load event fires, do this:
   game.loadArea("levels/karakura/zone00.json", function() {
     game.reset();
@@ -900,12 +955,16 @@ obstacles_image.addEventListener("load", function(event) {// When the load event
   orb_loaded = true;
 });
 
+/////////////////////////////////////////////////////
+////////// Loading the player sprite sheet /////////
+///////////////////////////////////////////////////
 
 display.sprite_sheet.image.addEventListener("load", function(event) {
   game.loadArea("levels/karakura/zone00.json", function() {
     game.reset();
   });
 });
+
 
 /////////////////////////////////////////////////////
 ////////// The paths to the image files ////////////
