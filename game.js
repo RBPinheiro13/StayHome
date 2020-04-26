@@ -266,7 +266,7 @@ display = {
 
     if(touchscreen){
       this.renderButtons(controller.touch_buttons);
-      this.touch_output.innerHTML = "X: " + controller.touch_X + "Y: " + controller.touch_Y;
+      this.touch_output.innerHTML = "X: " + controller.touch_X + " Y: " + controller.touch_Y + " Ratio " + display.buffer_output_ratio;
     };
 
 
