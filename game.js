@@ -177,6 +177,7 @@ display = {
   // buffer2:document.createElement("canvas"),
   context:document.querySelector("canvas").getContext("2d"),
   output:document.getElementById("output"),
+  touch_output:document.getElementById("touch"),
   // output:document.querySelector("p"), // used to show output in browser window
   bounding_rectangle:undefined,
   /* The sprite sheet object holds the sprite sheet graphic and some animation frame
@@ -263,7 +264,10 @@ display = {
 
     this.context.drawImage(display.buffer.canvas, 0, 0, display.buffer.canvas.width, display.buffer.canvas.height, 0, 0, display.context.canvas.width, display.context.canvas.height/touch_sz);
 
-    if(touchscreen){this.renderButtons(controller.buttons);};
+    if(touchscreen){
+      this.renderButtons(controller.touch_buttons);
+      this.touch_output.innerHTML = "X: " + event.targetTouches[0].clientX + "Y: " + event.targetTouches[0].clientY;
+    };
 
 
     // this.output.innerHTML = "tile_x: " + game.player.tile_x + "<br>tile_y: " + game.player.tile_y + "<br>map index: " + game.player.tile_y + " * " + game.world.columns + " + " + game.player.tile_x + " = " + String(game.player.tile_y * game.world.columns + game.player.tile_x + "Zone " +game.world.id);
@@ -271,16 +275,16 @@ display = {
 
   },
 
-  renderButtons:function(buttons) {
+  renderButtons:function(touch_buttons) {
 
   var button, index;
 
   this.context.fillStyle = "#202830";
   this.context.fillRect(0, this.context.canvas.height/touch_sz, this.context.canvas.width, this.context.canvas.height);
 
-  for (index = buttons.length - 1; index > -1; -- index) {
+  for (index = touch_buttons.length - 1; index > -1; -- index) {
 
-    button = buttons[index];
+    button = touch_buttons[index];
 
     this.context.fillStyle = button.color;
     this.context.fillRect(button.x/display.buffer_output_ratio, button.y/display.buffer_output_ratio, button.width/display.buffer_output_ratio, button.height/display.buffer_output_ratio);
@@ -321,7 +325,7 @@ controller = {
   /* Now each key object knows its physical state as well as its active state.
   When a key is active it is used in the game logic, but its physical state is
   always recorded and never altered for reference. */
-  buttons:[
+  touch_buttons:[
     new TouchButton(10, 185, 60, 60,"▲", "#f09000"),
     new TouchButton(80, 185, 60, 60,"▼", "#f09000"),
     new TouchButton(220, 185, 60, 60,"◄", "#0090f0"),
@@ -334,9 +338,9 @@ controller = {
     var button, index0, index1, touch;
 
     // loop through all buttons:
-    for (index0 = this.buttons.length - 1; index0 > -1; -- index0) {
+    for (index0 = this.touch_buttons.length - 1; index0 > -1; -- index0) {
 
-      button = this.buttons[index0];
+      button = this.touch_buttons[index0];
       button.active = false;
 
       // loop through all touch objects:
