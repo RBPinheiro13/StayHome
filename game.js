@@ -354,7 +354,7 @@ controller = {
         controller.touch_Y = touch.clientY - display.bounding_rectangle.top;
 
         // make sure the touch coordinates are adjusted for both the canvas offset and the scale ratio of the buffer and output canvases:
-        if (button.containsPoint((touch.clientX - display.bounding_rectangle.left) * display.buffer_output_ratio, (touch.clientY - display.bounding_rectangle.top) * display.buffer_output_ratio)) {
+        if (button.containsPoint((touch.clientX - display.bounding_rectangle.left), (touch.clientY - display.bounding_rectangle.top))) {
 
           button.active = true;
           break;// once the button is active, there's no need to check if any other points are inside, so continue
@@ -601,7 +601,7 @@ game = {
 
       }
 
-      if (controller.left.active) {
+      if (controller.left.active||controller.touch_buttons[2].active) {
 
         /* To change the animation, all you have to do is call animation.change. */
         game.player.animation.change(display.sprite_sheet.frame_sets[3], 50);
@@ -610,7 +610,7 @@ game = {
 
       }
 
-      if (controller.right.active) {
+      if (controller.right.active||controller.touch_buttons[3].active) {
 
         game.player.animation.change(display.sprite_sheet.frame_sets[2], 50);
         game.player.x_velocity += 0.05;
