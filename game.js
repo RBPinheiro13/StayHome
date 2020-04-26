@@ -619,13 +619,13 @@ game = {
       }
 
       /* If you're just standing still, change the animation to standing still. */
-      if (!controller.left.active && !controller.right.active && game.player.last_mov=="R") {
+      if (!(controller.left.active||controller.touch_buttons[2].active) && !(controller.right.active||controller.touch_buttons[3].active) && game.player.last_mov=="R") {
 
         game.player.animation.change(display.sprite_sheet.frame_sets[0], 80);
 
       }
 
-      if (!controller.left.active && !controller.right.active && game.player.last_mov=="L") {
+      if (!(controller.left.active||controller.touch_buttons[2].active) && !(controller.right.active||controller.touch_buttons[3].active) && game.player.last_mov=="L") {
 
         game.player.animation.change(display.sprite_sheet.frame_sets[1], 80);
 
