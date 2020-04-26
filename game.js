@@ -350,11 +350,11 @@ controller = {
       for (index1 = target_touches.length - 1; index1 > -1; -- index1) {
 
         touch = target_touches[index1];
-        controller.touch_X = touch.clientX - display.bounding_rectangle.left;
-        controller.touch_Y = touch.clientY - display.bounding_rectangle.top;
+        controller.touch_X = (touch.clientX - display.bounding_rectangle.left)*display.buffer_output_ratio;
+        controller.touch_Y = (touch.clientY - display.bounding_rectangle.top)*display.buffer_output_ratio;
 
         // make sure the touch coordinates are adjusted for both the canvas offset and the scale ratio of the buffer and output canvases:
-        if (button.containsPoint((touch.clientX - display.bounding_rectangle.left), (touch.clientY - display.bounding_rectangle.top))) {
+        if (button.containsPoint((touch.clientX - display.bounding_rectangle.left)*display.buffer_output_ratio, (touch.clientY - display.bounding_rectangle.top)*display.buffer_output_ratio)) {
 
           button.active = true;
           break;// once the button is active, there's no need to check if any other points are inside, so continue
