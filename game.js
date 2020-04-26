@@ -266,7 +266,7 @@ display = {
 
     if(touchscreen){
       this.renderButtons(controller.touch_buttons);
-      this.touch_output.innerHTML = "X: " + event.targetTouches[0].clientX + "Y: " + event.targetTouches[0].clientY;
+      this.touch_output.innerHTML = "X: " + controller.touch_X + "Y: " + controller.touch_Y;
     };
 
 
@@ -325,6 +325,9 @@ controller = {
   /* Now each key object knows its physical state as well as its active state.
   When a key is active it is used in the game logic, but its physical state is
   always recorded and never altered for reference. */
+  touch_X:undefined,
+  touch_Y:undefined,
+
   touch_buttons:[
     new TouchButton(10, 185, 60, 60,"▲", "#f09000"),
     new TouchButton(80, 185, 60, 60,"▼", "#f09000"),
@@ -347,6 +350,8 @@ controller = {
       for (index1 = target_touches.length - 1; index1 > -1; -- index1) {
 
         touch = target_touches[index1];
+        controller.touch_X = touch.clientX;
+        controller.touch_Y = touch.clientY;
 
         // make sure the touch coordinates are adjusted for both the canvas offset and the scale ratio of the buffer and output canvases:
         if (button.containsPoint((touch.clientX - display.bounding_rectangle.left) * display.buffer_output_ratio, (touch.clientY - display.bounding_rectangle.top) * display.buffer_output_ratio)) {
