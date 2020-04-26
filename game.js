@@ -593,9 +593,10 @@ game = {
 
     loop:function(time_stamp) {
 
-      if (controller.up.active && !game.player.jumping) {
+      if ((controller.up.active||controller.touch_buttons[0].active) && !game.player.jumping) {
 
         controller.up.active = false;
+        controller.touch_buttons[0].active = false;
         game.player.jumping = true;
         game.player.y_velocity -= 12;
 
@@ -683,9 +684,10 @@ game = {
 
         if (game.player.x > door.x && game.player.x < door.x + door.width) {
 
-          if (controller.down.active) {
+          if ((controller.down.active||controller.touch_buttons[1].active)) {
 
             controller.down.active = false;
+            controller.touch_buttons[1].active = false;
             game.player.x = door.destination_x;
             game.loadArea(door.destination_zone, game.reset);
             game.area_visited[game.world.id]=true;
